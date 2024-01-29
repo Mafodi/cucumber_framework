@@ -25,32 +25,38 @@ public class LandingPageSteps {
 	//public WebDriver driver;
 	public String landingPageProductName;
 	public String offerPageProductName;
+	
+	
 	public TestBase testBase;
+	LandingPageObjects landingPageObjects;
 	TestContextSetup testContextSetup;
 	
 	public LandingPageSteps(TestContextSetup testContextSetup) {
 		this.testContextSetup = testContextSetup;
+		this.landingPageObjects = testContextSetup.pageObjectManager.getLandingPageObjects();
 	}
 	
 	@Given("User is on GreenKart landing page")
 	public void user_is_on_green_kart_landing_page() throws IOException {
-		//testContextSetup.testBase.driverManagerManager();
-		
-//		testContextSetup.driver = WebDriverManager.chromedriver().create();
-//		testContextSetup.driver.manage().window().maximize();
-//		testContextSetup.driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
+		Assert.assertTrue(landingPageObjects.getLandingTitlePage().contains("GreenKart"));
 	}
 	
 	@When("^user searched with shortname (.+) and extract actual name of the product$")
 	public void user_searched_with_shortname_and_extract_actual_name_of_the_product(String searchName) throws InterruptedException {
 		//new LandingPageObjects(testContextSetup.driver);
-		LandingPageObjects landingPageObjects = testContextSetup.pageObjectManager.getLandingPageObjects();
+		
 		landingPageObjects.searchItem(searchName);
 		
 		Thread.sleep(4000);
 		testContextSetup.landingPageProductName = landingPageObjects.getProductName().split("-")[0].trim();
 		System.out.println(landingPageProductName + " is extracted from product home page");
 		
+	}
+	
+	@When("added {string} items of the selected product to cart")
+	public void added_items_of_the_selected_product_to_cart(String quantity) {
+	   landingPageObjects.clickIncrement(Integer.parseInt(quantity));
+	   landingPageObjects.addToCart();
 	}
 	
 
